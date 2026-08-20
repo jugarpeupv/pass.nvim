@@ -143,9 +143,25 @@
                          (if picker
                              (vim.schedule #(M.open pattern)))))))
 
-(fn M.copy [entry]
-  "Copy the password into the system clipboard"
+(fn M.copy [picker entry]
+  "Copy the first line of the password into the system clipboard"
 
+  (local entry (or entry picker))
+  (local path entry.text)
+
+  (if (= (vim.trim path) "")
+    (lua :return))
+
+  (local password (utils.copy-first-line path))
+
+  (vim.fn.setreg :+ password)
+
+  (utils.info (.. "Copied password " path)))
+
+(fn M.copy-all [picker entry]
+  "Copy the full password entry into the system clipboard"
+
+  (local entry (or entry picker))
   (local path entry.text)
 
   (if (= (vim.trim path) "")
@@ -170,6 +186,7 @@
   (if ok?
     (do
       (vim.fn.setreg :+ code)
+      (picker:close)
       (utils.info (.. "Copied OTP for " path)))
     (utils.error (.. "No OTP secret found for " path))))
 
@@ -209,11 +226,12 @@
                        :format :text
                        :layout {:preset :select}
 :win {:input {:keys {:<c-r> (tx :rename {:mode [:i :n]})
-                                            :<c-d> (tx :delete {:mode [:i :n]})
-                                            :<c-e> (tx :edit {:mode [:i :n]})
-                                            :<c-i> (tx :insert {:mode [:i :n]})
-                                            :<c-l> (tx :log {:mode [:i :n]})
-                                            :<c-o> (tx :otp-copy {:mode [:i :n]})}}}
+                                             :<c-d> (tx :delete {:mode [:i :n]})
+                                             :<c-e> (tx :edit {:mode [:i :n]})
+                                             :<c-i> (tx :insert {:mode [:i :n]})
+                                             :<c-l> (tx :log {:mode [:i :n]})
+                                             :<c-o> (tx :otp-copy {:mode [:i :n]})
+                                             :<c-b> (tx :copy-all {:mode [:i :n]})}}}
                        :confirm :copy
                        :actions {:rename M.rename
                                  :insert M.insert
@@ -221,6 +239,7 @@
                                  :delete M.delete
                                  :log (auto-close-picker M.log)
                                  :otp-copy M.otp-copy
-                                 :copy (auto-close-picker M.copy)}}))
+                                 :copy M.copy
+                                 :copy-all M.copy-all}}))
 
 M

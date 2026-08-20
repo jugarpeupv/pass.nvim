@@ -106,6 +106,11 @@
   "Show existing password"
   (run {:cmd [:pass :show path]}))
 
+(fn M.copy-first-line [path]
+  "Return the first line of the password entry"
+  (local content (run {:cmd [:pass :show path]}))
+  (or (content:match "([^\n]+)") ""))
+
 (fn M.otp [path]
   "Show the OTP code for an existing password"
   (run {:cmd [:pass :otp path]}))

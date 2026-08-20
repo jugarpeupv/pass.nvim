@@ -33,15 +33,16 @@ subcommand.
 
 While in the picker, the following mappings are available:
 
-| Key     | Action                      |
-| ---     | ---                         |
-| `<CR>`  | Copy password to clipboard  |
-| `<C-o>` | Copy OTP code to clipboard  |
-| `<C-e>` | Edit entry                  |
-| `<C-r>` | Rename entry                |
-| `<C-d>` | Delete entry                |
-| `<C-i>` | Insert new password         |
-| `<C-l>` | Show password store git log |
+| Key     | Action                                      |
+| ---     | ---                                         |
+| `<CR>`  | Copy first line to clipboard                |
+| `<C-b>` | Copy all lines to clipboard                 |
+| `<C-o>` | Copy OTP code to clipboard and close the picker |
+| `<C-e>` | Edit entry                                  |
+| `<C-r>` | Rename entry                                |
+| `<C-d>` | Delete entry                                |
+| `<C-i>` | Insert new password                         |
+| `<C-l>` | Show password store git log                 |
 
 ## Requirements & Caveats
 

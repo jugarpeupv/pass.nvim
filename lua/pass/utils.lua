@@ -109,6 +109,10 @@ end
 M.show = function(path)
   return run({cmd = {"pass", "show", path}})
 end
+M["copy-first-line"] = function(path)
+  local content = run({cmd = {"pass", "show", path}})
+  return (content:match("([^\n]+)") or "")
+end
 M.otp = function(path)
   return run({cmd = {"pass", "otp", path}})
 end

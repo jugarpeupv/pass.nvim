@@ -16,7 +16,7 @@ and then close the picker.
 - **WHEN** the user presses `<C-o>` in the picker with an entry selected that has an OTP secret
 - **THEN** the OTP code for that entry is copied to the system clipboard (`+` register)
 
-#### Scenario: Picker remains open after copying OTP
+#### Scenario: Picker closes after copying OTP
 - **WHEN** the user presses `<C-o>` in the picker with an entry selected that has an OTP secret
 - **THEN** the picker closes after the OTP code is copied to the system clipboard
 

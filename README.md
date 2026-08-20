@@ -36,6 +36,7 @@ While in the picker, the following mappings are available:
 | Key     | Action                      |
 | ---     | ---                         |
 | `<CR>`  | Copy password to clipboard  |
+| `<C-o>` | Copy OTP code to clipboard  |
 | `<C-e>` | Edit entry                  |
 | `<C-r>` | Rename entry                |
 | `<C-d>` | Delete entry                |

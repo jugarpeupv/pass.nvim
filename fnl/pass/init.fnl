@@ -157,6 +157,22 @@
 
   (utils.info (.. "Copied " path)))
 
+(fn M.otp-copy [picker entry]
+  "Copy the OTP code for the entry into the system clipboard"
+
+  (local path entry.text)
+
+  (if (= (vim.trim path) "")
+    (lua :return))
+
+  (local (ok? code) (pcall utils.otp path))
+
+  (if ok?
+    (do
+      (vim.fn.setreg :+ code)
+      (utils.info (.. "Copied OTP for " path)))
+    (utils.error (.. "No OTP secret found for " path))))
+
 (fn M.log []
   "Show the git log for the password store"
 
@@ -192,17 +208,19 @@
                        :items (utils.list-passwords)
                        :format :text
                        :layout {:preset :select}
-                       :win {:input {:keys {:<c-r> (tx :rename {:mode [:i :n]})
+:win {:input {:keys {:<c-r> (tx :rename {:mode [:i :n]})
                                             :<c-d> (tx :delete {:mode [:i :n]})
                                             :<c-e> (tx :edit {:mode [:i :n]})
                                             :<c-i> (tx :insert {:mode [:i :n]})
-                                            :<c-l> (tx :log {:mode [:i :n]})}}}
+                                            :<c-l> (tx :log {:mode [:i :n]})
+                                            :<c-o> (tx :otp-copy {:mode [:i :n]})}}}
                        :confirm :copy
                        :actions {:rename M.rename
                                  :insert M.insert
                                  :edit M.edit
                                  :delete M.delete
                                  :log (auto-close-picker M.log)
+                                 :otp-copy M.otp-copy
                                  :copy (auto-close-picker M.copy)}}))
 
 M

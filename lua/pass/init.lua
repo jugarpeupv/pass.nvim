@@ -144,16 +144,30 @@ M.copy = function(entry)
   vim.fn.setreg("+", password)
   return utils.info(("Copied " .. path))
 end
+M["otp-copy"] = function(picker, entry)
+  local path = entry.text
+  if (vim.trim(path) == "") then
+    return
+  else
+  end
+  local ok_3f, code = pcall(utils.otp, path)
+  if ok_3f then
+    vim.fn.setreg("+", code)
+    return utils.info(("Copied OTP for " .. path))
+  else
+    return utils.error(("No OTP secret found for " .. path))
+  end
+end
 M.log = function()
   local snacks_picker = require("snacks.picker")
   return snacks_picker.git_log({cwd = utils["get-password-store-dir"]()})
 end
 local function auto_close_picker(action)
-  local function _24_(picker, entry)
+  local function _26_(picker, entry)
     picker:close()
     return action(entry)
   end
-  return _24_
+  return _26_
 end
 M.insert = function(picker)
   local pattern = ((picker and picker.finder.filter.pattern) or "")
@@ -161,10 +175,10 @@ M.insert = function(picker)
     picker:close()
   else
   end
-  local function _26_(new_path)
+  local function _28_(new_path)
     return M.edit(picker, {text = new_path})
   end
-  return vim.ui.input({prompt = "New password's path", default = pattern}, _26_)
+  return vim.ui.input({prompt = "New password's path", default = pattern}, _28_)
 end
 M.open = function(pattern)
   local ok_3f, snacks_picker = pcall(require, "snacks.picker")
@@ -173,6 +187,6 @@ M.open = function(pattern)
     return
   else
   end
-  return snacks_picker.pick({title = "Password Store", pattern = pattern, items = utils["list-passwords"](), format = "text", layout = {preset = "select"}, win = {input = {keys = {["<c-r>"] = {"rename", mode = {"i", "n"}}, ["<c-d>"] = {"delete", mode = {"i", "n"}}, ["<c-e>"] = {"edit", mode = {"i", "n"}}, ["<c-i>"] = {"insert", mode = {"i", "n"}}, ["<c-l>"] = {"log", mode = {"i", "n"}}}}}, confirm = "copy", actions = {rename = M.rename, insert = M.insert, edit = M.edit, delete = M.delete, log = auto_close_picker(M.log), copy = auto_close_picker(M.copy)}})
+  return snacks_picker.pick({title = "Password Store", pattern = pattern, items = utils["list-passwords"](), format = "text", layout = {preset = "select"}, win = {input = {keys = {["<c-r>"] = {"rename", mode = {"i", "n"}}, ["<c-d>"] = {"delete", mode = {"i", "n"}}, ["<c-e>"] = {"edit", mode = {"i", "n"}}, ["<c-i>"] = {"insert", mode = {"i", "n"}}, ["<c-l>"] = {"log", mode = {"i", "n"}}, ["<c-o>"] = {"otp-copy", mode = {"i", "n"}}}}}, confirm = "copy", actions = {rename = M.rename, insert = M.insert, edit = M.edit, delete = M.delete, log = auto_close_picker(M.log), ["otp-copy"] = M["otp-copy"], copy = auto_close_picker(M.copy)}})
 end
 return M

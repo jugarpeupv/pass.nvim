@@ -109,6 +109,9 @@ end
 M.show = function(path)
   return run({cmd = {"pass", "show", path}})
 end
+M.otp = function(path)
+  return run({cmd = {"pass", "otp", path}})
+end
 M["save-content"] = function(path, content)
   return run({cmd = {"pass", "insert", "-m", "-f", path}, stdin = content})
 end

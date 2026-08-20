@@ -106,6 +106,10 @@
   "Show existing password"
   (run {:cmd [:pass :show path]}))
 
+(fn M.otp [path]
+  "Show the OTP code for an existing password"
+  (run {:cmd [:pass :otp path]}))
+
 (fn M.save-content [path content]
   "Insert or update a password"
   (run {:cmd [:pass :insert :-m :-f path]

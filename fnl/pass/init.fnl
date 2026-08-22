@@ -190,6 +190,34 @@
       (utils.info (.. "Copied OTP for " path)))
     (utils.error (.. "No OTP secret found for " path))))
 
+(fn M.username-copy [picker entry]
+  "Copy the username value from the entry into the system clipboard"
+
+  (local entry (or entry picker))
+  (local path entry.text)
+
+  (if (= (vim.trim path) "")
+    (lua :return))
+
+  (local content (utils.show path))
+  (var username nil)
+  (var username-count 0)
+
+  (each [line (content:gmatch "[^\r\n]+")]
+    (let [value (line:match "^username:%s*(.+)$")]
+      (when value
+        (set username-count (+ username-count 1))
+        (when (= username nil)
+          (set username (vim.trim value))))))
+
+  (if username
+    (do
+      (vim.fn.setreg :+ username)
+      (when (> username-count 1)
+        (utils.info (.. "Multiple username lines found in " path ", using first")))
+      (utils.info (.. "Copied username for " path)))
+    (utils.error (.. "No username found in " path))))
+
 (fn M.log []
   "Show the git log for the password store"
 
@@ -230,16 +258,18 @@
                                              :<c-e> (tx :edit {:mode [:i :n]})
                                              :<c-i> (tx :insert {:mode [:i :n]})
                                              :<c-l> (tx :log {:mode [:i :n]})
-                                             :<c-o> (tx :otp-copy {:mode [:i :n]})
-                                             :<c-b> (tx :copy-all {:mode [:i :n]})}}}
+                                              :<c-o> (tx :otp-copy {:mode [:i :n]})
+                                              :<c-s> (tx :username-copy {:mode [:i :n]})
+                                              :<c-b> (tx :copy-all {:mode [:i :n]})}}}
                        :confirm :copy
                        :actions {:rename M.rename
                                  :insert M.insert
                                  :edit M.edit
                                  :delete M.delete
                                  :log (auto-close-picker M.log)
-                                 :otp-copy M.otp-copy
-                                 :copy M.copy
+                                  :otp-copy M.otp-copy
+                                  :username-copy M.username-copy
+                                  :copy M.copy
                                  :copy-all M.copy-all}}))
 
 M

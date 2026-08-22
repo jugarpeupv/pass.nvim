@@ -171,16 +171,48 @@ M["otp-copy"] = function(picker, entry)
     return utils.error(("No OTP secret found for " .. path))
   end
 end
+M["username-copy"] = function(picker, entry)
+  local entry0 = (entry or picker)
+  local path = entry0.text
+  if (vim.trim(path) == "") then
+    return
+  else
+  end
+  local content = utils.show(path)
+  local username = nil
+  local username_count = 0
+  for line in content:gmatch("[^\r\n]+") do
+    local value = line:match("^username:%s*(.+)$")
+    if value then
+      username_count = (username_count + 1)
+      if (username == nil) then
+        username = vim.trim(value)
+      else
+      end
+    else
+    end
+  end
+  if username then
+    vim.fn.setreg("+", username)
+    if (username_count > 1) then
+      utils.info(("Multiple username lines found in " .. path .. ", using first"))
+    else
+    end
+    return utils.info(("Copied username for " .. path))
+  else
+    return utils.error(("No username found in " .. path))
+  end
+end
 M.log = function()
   local snacks_picker = require("snacks.picker")
   return snacks_picker.git_log({cwd = utils["get-password-store-dir"]()})
 end
 local function auto_close_picker(action)
-  local function _27_(picker, entry)
+  local function _32_(picker, entry)
     picker:close()
     return action(entry)
   end
-  return _27_
+  return _32_
 end
 M.insert = function(picker)
   local pattern = ((picker and picker.finder.filter.pattern) or "")
@@ -188,10 +220,10 @@ M.insert = function(picker)
     picker:close()
   else
   end
-  local function _29_(new_path)
+  local function _34_(new_path)
     return M.edit(picker, {text = new_path})
   end
-  return vim.ui.input({prompt = "New password's path", default = pattern}, _29_)
+  return vim.ui.input({prompt = "New password's path", default = pattern}, _34_)
 end
 M.open = function(pattern)
   local ok_3f, snacks_picker = pcall(require, "snacks.picker")
@@ -200,6 +232,6 @@ M.open = function(pattern)
     return
   else
   end
-  return snacks_picker.pick({title = "Password Store", pattern = pattern, items = utils["list-passwords"](), format = "text", layout = {preset = "select"}, win = {input = {keys = {["<c-r>"] = {"rename", mode = {"i", "n"}}, ["<c-d>"] = {"delete", mode = {"i", "n"}}, ["<c-e>"] = {"edit", mode = {"i", "n"}}, ["<c-i>"] = {"insert", mode = {"i", "n"}}, ["<c-l>"] = {"log", mode = {"i", "n"}}, ["<c-o>"] = {"otp-copy", mode = {"i", "n"}}, ["<c-b>"] = {"copy-all", mode = {"i", "n"}}}}}, confirm = "copy", actions = {rename = M.rename, insert = M.insert, edit = M.edit, delete = M.delete, log = auto_close_picker(M.log), ["otp-copy"] = M["otp-copy"], copy = M.copy, ["copy-all"] = M["copy-all"]}})
+  return snacks_picker.pick({title = "Password Store", pattern = pattern, items = utils["list-passwords"](), format = "text", layout = {preset = "select"}, win = {input = {keys = {["<c-r>"] = {"rename", mode = {"i", "n"}}, ["<c-d>"] = {"delete", mode = {"i", "n"}}, ["<c-e>"] = {"edit", mode = {"i", "n"}}, ["<c-i>"] = {"insert", mode = {"i", "n"}}, ["<c-l>"] = {"log", mode = {"i", "n"}}, ["<c-o>"] = {"otp-copy", mode = {"i", "n"}}, ["<c-s>"] = {"username-copy", mode = {"i", "n"}}, ["<c-b>"] = {"copy-all", mode = {"i", "n"}}}}}, confirm = "copy", actions = {rename = M.rename, insert = M.insert, edit = M.edit, delete = M.delete, log = auto_close_picker(M.log), ["otp-copy"] = M["otp-copy"], ["username-copy"] = M["username-copy"], copy = M.copy, ["copy-all"] = M["copy-all"]}})
 end
 return M

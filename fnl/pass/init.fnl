@@ -236,7 +236,7 @@
                           picker.finder.filter.pattern)
                      ""))
   (if (and picker picker.close) (picker:close))
-  (vim.ui.input {:prompt "New password's path"
+  (vim.ui.input {:prompt "New password's path: "
                  :default pattern}
                 (fn [new-path]
                   (M.edit picker {:text new-path}))))
@@ -248,19 +248,19 @@
     (utils.error "snacks.nvim is required to run the picker")
     (lua :return))
 
-  (snacks-picker.pick {:title "Password Store"
+  (snacks-picker.pick {:title "Password Store (<CR> password, <C-x> delete, <C-e> edit, <C-i> insert, <C-l> log, <C-s> username, <C-o> otp)"
                        :pattern pattern
                        :items (utils.list-passwords)
                        :format :text
                        :layout {:preset :select}
-:win {:input {:keys {:<c-r> (tx :rename {:mode [:i :n]})
-                                             :<c-d> (tx :delete {:mode [:i :n]})
-                                             :<c-e> (tx :edit {:mode [:i :n]})
-                                             :<c-i> (tx :insert {:mode [:i :n]})
-                                             :<c-l> (tx :log {:mode [:i :n]})
-                                              :<c-o> (tx :otp-copy {:mode [:i :n]})
-                                              :<c-s> (tx :username-copy {:mode [:i :n]})
-                                              :<c-b> (tx :copy-all {:mode [:i :n]})}}}
+:win {:input {:keys {:<c-r> (tx :rename {:mode [:i :n] :desc "Rename entry"})
+                                             :<c-x> (tx :delete {:mode [:i :n] :desc "Delete entry"})
+                                             :<c-e> (tx :edit {:mode [:i :n] :desc "Edit entry"})
+                                             :<c-i> (tx :insert {:mode [:i :n] :desc "Insert new password"})
+                                             :<c-l> (tx :log {:mode [:i :n] :desc "Show password store git log"})
+                                              :<c-o> (tx :otp-copy {:mode [:i :n] :desc "Copy OTP code and close picker"})
+                                              :<c-s> (tx :username-copy {:mode [:i :n] :desc "Copy username"})
+                                              :<c-b> (tx :copy-all {:mode [:i :n] :desc "Copy all lines"})}}}
                        :confirm :copy
                        :actions {:rename M.rename
                                  :insert M.insert

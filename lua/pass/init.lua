@@ -223,7 +223,7 @@ M.insert = function(picker)
   local function _34_(new_path)
     return M.edit(picker, {text = new_path})
   end
-  return vim.ui.input({prompt = "New password's path", default = pattern}, _34_)
+  return vim.ui.input({prompt = "New password's path: ", default = pattern}, _34_)
 end
 M.open = function(pattern)
   local ok_3f, snacks_picker = pcall(require, "snacks.picker")
@@ -232,6 +232,6 @@ M.open = function(pattern)
     return
   else
   end
-  return snacks_picker.pick({title = "Password Store", pattern = pattern, items = utils["list-passwords"](), format = "text", layout = {preset = "select"}, win = {input = {keys = {["<c-r>"] = {"rename", mode = {"i", "n"}}, ["<c-d>"] = {"delete", mode = {"i", "n"}}, ["<c-e>"] = {"edit", mode = {"i", "n"}}, ["<c-i>"] = {"insert", mode = {"i", "n"}}, ["<c-l>"] = {"log", mode = {"i", "n"}}, ["<c-o>"] = {"otp-copy", mode = {"i", "n"}}, ["<c-s>"] = {"username-copy", mode = {"i", "n"}}, ["<c-b>"] = {"copy-all", mode = {"i", "n"}}}}}, confirm = "copy", actions = {rename = M.rename, insert = M.insert, edit = M.edit, delete = M.delete, log = auto_close_picker(M.log), ["otp-copy"] = M["otp-copy"], ["username-copy"] = M["username-copy"], copy = M.copy, ["copy-all"] = M["copy-all"]}})
+  return snacks_picker.pick({title = "Password Store (<CR> password, <C-x> delete, <C-e> edit, <C-i> insert, <C-l> log, <C-s> username, <C-o> otp)", pattern = pattern, items = utils["list-passwords"](), format = "text", layout = {preset = "select"}, win = {input = {keys = {["<c-r>"] = {"rename", mode = {"i", "n"}, desc = "Rename entry"}, ["<c-x>"] = {"delete", mode = {"i", "n"}, desc = "Delete entry"}, ["<c-e>"] = {"edit", mode = {"i", "n"}, desc = "Edit entry"}, ["<c-i>"] = {"insert", mode = {"i", "n"}, desc = "Insert new password"}, ["<c-l>"] = {"log", mode = {"i", "n"}, desc = "Show password store git log"}, ["<c-o>"] = {"otp-copy", mode = {"i", "n"}, desc = "Copy OTP code and close picker"}, ["<c-s>"] = {"username-copy", mode = {"i", "n"}, desc = "Copy username"}, ["<c-b>"] = {"copy-all", mode = {"i", "n"}, desc = "Copy all lines"}}}}, confirm = "copy", actions = {rename = M.rename, insert = M.insert, edit = M.edit, delete = M.delete, log = auto_close_picker(M.log), ["otp-copy"] = M["otp-copy"], ["username-copy"] = M["username-copy"], copy = M.copy, ["copy-all"] = M["copy-all"]}})
 end
 return M
